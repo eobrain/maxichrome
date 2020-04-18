@@ -12,6 +12,7 @@ function * colorIndices () {
 
 const main = () => {
   const $n = document.getElementById('n')
+  const $totalCost = document.getElementById('total-cost')
   const $swatches = document.getElementById('swatches')
   $n.innerHTML = N
 
@@ -39,10 +40,12 @@ const main = () => {
   }
   show()
 
-  setInterval(() => {
-    step(model)
+  const iteration = () => {
+    $totalCost.innerHTML = step(model)
     show()
-  }, 10)
+    setTimeout(iteration, 0)
+  }
+  iteration()
 }
 
 window.addEventListener('DOMContentLoaded', main)

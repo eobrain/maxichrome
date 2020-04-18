@@ -4,16 +4,31 @@ import { randColorChange } from './random.js'
 const deltaE = cdc.differenceCiede2000
 
 export const step = colors => {
+  let totalCost = 0
   colors.forEach(a => {
-    const dClosest = () =>
-      colors.reduce((min, b) =>
-        Math.min(min, deltaE(a, b)), Infinity)
-    const dBefore = dClosest()
+    const cost = () =>
+      colors.reduce((sum, b) => {
+        if (a === b) {
+          return sum
+        }
+        const dE = deltaE(a.rgb, b.rgb)
+        if (dE === 0.0) {
+          return Infinity
+        }
+        return sum + 1 / dE
+      }, 0)
+    const costBefore = cost()
     const change = randColorChange()
     a.add(change)
-    const dAfter = dClosest()
-    if (dAfter < dBefore) {
+    const costAfter = cost()
+    if (costAfter > costBefore) {
+      // reject
       a.subtract(change)
+      totalCost += costAfter
+    } else {
+      // accept
+      totalCost += costAfter
     }
   })
+  return totalCost
 }
