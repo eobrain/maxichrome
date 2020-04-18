@@ -2,6 +2,7 @@
   "name": "maxichrome",
   "version": "0.0.1",
   "description": "Generate a set of maximally distinguishable colors",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "ava"
@@ -11,5 +12,8 @@
     "colour"
   ],
   "author": "Eamonn O'Brien-Strain",
-  "license": "EPL-2.0"
+  "license": "EPL-2.0",
+  "dependencies": {
+    "d3-color-difference": "^0.1.3"
+  }
 }
