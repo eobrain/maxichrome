@@ -1,6 +1,6 @@
 import { randInt } from './random.js'
 import Color from './color.js'
-import { step } from './index.js'
+import Optimizer from './index.js'
 
 const N = 16
 
@@ -44,9 +44,10 @@ const main = () => {
   }
   show()
 
+  const optimizer = new Optimizer()
   let unchangedCount = 1
   const iteration = () => {
-    const [t, totalCost, changed, nearest] = step(model)
+    const [t, totalCost, changed, nearest] = optimizer.step(model)
     $totalCost.innerHTML = totalCost
     $t.innerHTML = t
     $state.innerHTML = changed ? 'Optimizing...' : 'Found optimum.'

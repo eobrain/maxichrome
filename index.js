@@ -1,46 +1,52 @@
 import cdc from 'https://dev.jspm.io/d3-color-difference'
 import { shuffle } from './random.js'
 
-const deltaE = cdc.differenceCiede2000
+export default class {
+  constructor (kL = 1, kC = 1, kH = 1) {
+    this.deltaE = cdc.differenceCiede2000Weighted(kL, kC, kH)
+    this.temperature = 10
+  }
 
-let t = 1
+  _acceptanceProbability (dE) {
+    return 1 / (1 + Math.exp(dE / this.temperature))
+  }
 
-const acceptanceProbability = (dE) => 1 / (1 + Math.exp(dE / t))
-
-export const step = colors => {
-  let changed = false
-  let totalCost = 0
-  colors.forEach((_, i) => {
-    const cost = () => {
-      let dEMin = Infinity
-      colors.forEach((_, j) => {
-        if (i === j) {
-          return
-        }
-        const dE = deltaE(colors[i].rgb, colors[j].rgb)
-        if (dE < dEMin) {
-          dEMin = dE
+  step (colors) {
+    let changed = false
+    let totalCost = 0
+    colors.forEach((_, i) => {
+      const cost = () => {
+        let dEMin = Infinity
+        colors.forEach((_, j) => {
+          if (i === j) {
+            return
+          }
+          const dE = this.deltaE(colors[i].rgb, colors[j].rgb)
+          if (dE < dEMin) {
+            dEMin = dE
+          }
+        })
+        return -dEMin
+      }
+      const origA = colors[i]
+      let aBest = origA
+      let bestCost = cost()
+      shuffle(origA.perturbations()).forEach(aCandidate => {
+        colors[i] = aCandidate
+        const costCandidate = cost()
+        if (Math.random() < this._acceptanceProbability(costCandidate - bestCost)) {
+          changed = true
+          bestCost = costCandidate
+          aBest = aCandidate
         }
       })
-      return -dEMin
-    }
-    const origA = colors[i]
-    let aBest = origA
-    let bestCost = cost()
-    shuffle(origA.perturbations()).forEach(aCandidate => {
-      colors[i] = aCandidate
-      const costCandidate = cost()
-      if (Math.random() < acceptanceProbability(costCandidate - bestCost)) {
-        changed = true
-        bestCost = costCandidate
-        aBest = aCandidate
-      }
+      colors[i] = aBest
+      totalCost += bestCost
     })
-    colors[i] = aBest
-    totalCost += bestCost
-  })
-  t = t * 0.999
-  const nearest = colors.map(a =>
-    colors.reduce((min, b) => a === b ? min : Math.min(min, deltaE(a.rgb, b.rgb)), Infinity))
-  return [t, totalCost, changed, nearest]
+    this.temperature *= 0.998
+    const nearest = colors.map(a =>
+      colors.reduce((min, b) =>
+        a === b ? min : Math.min(min, this.deltaE(a.rgb, b.rgb)), Infinity))
+    return [this.temperature, totalCost, changed, nearest]
+  }
 }
