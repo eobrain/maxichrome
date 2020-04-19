@@ -12,9 +12,11 @@ function * colorIndices () {
 
 const main = () => {
   const $n = document.getElementById('n')
+  const $t = document.getElementById('t')
   const $totalCost = document.getElementById('total-cost')
   const $state = document.getElementById('state')
   const $swatches = document.getElementById('swatches')
+  const $nearest = document.getElementById('nearest')
   $n.innerHTML = N
 
   const $newSwatch = () => {
@@ -42,12 +44,20 @@ const main = () => {
   }
   show()
 
+  let unchangedCount = 1
   const iteration = () => {
-    const [totalCost, changed] = step(model)
+    const [t, totalCost, changed, nearest] = step(model)
     $totalCost.innerHTML = totalCost
+    $t.innerHTML = t
     $state.innerHTML = changed ? 'Optimizing...' : 'Found optimum.'
+
+    $nearest.innerHTML = nearest.map((dE, i) =>
+      `<div style="background-color:${model[i].cssColor()};height:5px;width:${Math.round(3 * dE)}%"></div>`).join('')
+
     show()
-    if (changed) {
+
+    unchangedCount = changed ? 0 : unchangedCount + 1
+    if (unchangedCount < 10) {
       setTimeout(iteration, 0)
     }
   }

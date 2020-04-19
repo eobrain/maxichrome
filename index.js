@@ -38,6 +38,8 @@ export const step = colors => {
     colors[i] = aBest
     totalCost += bestCost
   })
-  t = t * 0.999
-  return [totalCost, changed]
+  t = t * 0.99
+  const nearest = colors.map(a =>
+    colors.reduce((min, b) => a === b ? min : Math.min(min, deltaE(a.rgb, b.rgb)), Infinity))
+  return [t, totalCost, changed, nearest]
 }
