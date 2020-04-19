@@ -2,7 +2,7 @@ import { randInt } from './random.js'
 import Color from './color.js'
 import { step } from './index.js'
 
-const N = 8
+const N = 100
 
 function * colorIndices () {
   for (let i = 0; i < N; ++i) {

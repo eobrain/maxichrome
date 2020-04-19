@@ -1,6 +1,11 @@
 import cdc from 'https://dev.jspm.io/d3-color-difference'
+import { shuffle } from './random.js'
 
 const deltaE = cdc.differenceCiede2000
+
+let t = 0.1
+
+const acceptanceProbability = (dE) => 1 / (1 + Math.exp(dE / t))
 
 export const step = colors => {
   let changed = false
@@ -21,10 +26,10 @@ export const step = colors => {
     const origA = colors[i]
     let aBest = origA
     let bestCost = cost()
-    origA.perturbations().forEach(aCandidate => {
+    shuffle(origA.perturbations()).forEach(aCandidate => {
       colors[i] = aCandidate
       const costCandidate = cost()
-      if (costCandidate < bestCost) {
+      if (Math.random() < acceptanceProbability(costCandidate - bestCost)) {
         changed = true
         bestCost = costCandidate
         aBest = aCandidate
@@ -33,5 +38,6 @@ export const step = colors => {
     colors[i] = aBest
     totalCost += bestCost
   })
+  t = t * 0.99
   return [totalCost, changed]
 }
