@@ -17,6 +17,14 @@ class Color {
     this.rgb = rgb(r, g, b)
   }
 
+  invert () {
+    return new Color(
+      255 - this.rgb.r,
+      255 - this.rgb.g,
+      255 - this.rgb.b
+    )
+  }
+
   /** @return list of colors that differ by one unit of r, g, b */
   perturbations () {
     const result = []

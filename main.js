@@ -2,7 +2,7 @@ import { randInt } from './random.js'
 import Color from './color.js'
 import { step } from './index.js'
 
-const N = 100
+const N = 32
 
 function * colorIndices () {
   for (let i = 0; i < N; ++i) {
@@ -36,6 +36,7 @@ const main = () => {
       const cssColor = model[i].cssColor()
       const $swatch = view[i]
       $swatch.style.setProperty('background-color', cssColor)
+      $swatch.style.setProperty('color', model[i].invert().cssColor())
       $swatch.innerHTML = ' ' + cssColor + ' '
     }
   }

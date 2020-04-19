@@ -3,7 +3,7 @@ import { shuffle } from './random.js'
 
 const deltaE = cdc.differenceCiede2000
 
-let t = 0.1
+let t = 1
 
 const acceptanceProbability = (dE) => 1 / (1 + Math.exp(dE / t))
 
@@ -38,6 +38,6 @@ export const step = colors => {
     colors[i] = aBest
     totalCost += bestCost
   })
-  t = t * 0.99
+  t = t * 0.999
   return [totalCost, changed]
 }
