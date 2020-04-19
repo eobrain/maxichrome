@@ -6,9 +6,31 @@ const hex = n => n.toString(16).replace(/^(.)$/, '0$1')
 
 const clamp = x => Math.max(0, Math.min(255, x))
 
-export default class {
+function * near (x) {
+  for (let i = Math.max(0, x - 1); i <= Math.min(255, x + 1); ++i) {
+    yield i
+  }
+}
+
+class Color {
   constructor (r, g, b) {
     this.rgb = rgb(r, g, b)
+  }
+
+  /** @return list of colors that differ by one unit of r, g, b */
+  perturbations () {
+    const result = []
+    for (const r of near(this.rgb.r)) {
+      for (const g of near(this.rgb.g)) {
+        for (const b of near(this.rgb.b)) {
+          if (r === this.rgb.r && g === this.rgb.g && b === this.rgb.b) {
+            continue
+          }
+          result.push(new Color(r, g, b))
+        }
+      }
+    }
+    return result
   }
 
   add (delta) {
@@ -39,3 +61,5 @@ export default class {
     return '#' + hex(this.rgb.r) + hex(this.rgb.g) + hex(this.rgb.b)
   }
 }
+
+export default Color

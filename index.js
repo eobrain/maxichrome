@@ -1,14 +1,15 @@
 import cdc from 'https://dev.jspm.io/d3-color-difference'
-import { randColorChange } from './random.js'
 
 const deltaE = cdc.differenceCiede2000
 
 export const step = colors => {
+  let changed = false
   let totalCost = 0
-  colors.forEach(a => {
+  colors.forEach((_, i) => {
     const cost = () =>
       colors.reduce((sum, b) => {
-        if (a === b) {
+        const a = colors[i]
+        if (b === a) {
           return sum
         }
         const dE = deltaE(a.rgb, b.rgb)
@@ -17,18 +18,20 @@ export const step = colors => {
         }
         return sum + 1 / dE
       }, 0)
-    const costBefore = cost()
-    const change = randColorChange()
-    a.add(change)
-    const costAfter = cost()
-    if (costAfter > costBefore) {
-      // reject
-      a.subtract(change)
-      totalCost += costAfter
-    } else {
-      // accept
-      totalCost += costAfter
-    }
+    const origA = colors[i]
+    let aBest = origA
+    let bestCost = cost()
+    origA.perturbations().forEach(aCandidate => {
+      colors[i] = aCandidate
+      const costCandidate = cost()
+      if (costCandidate < bestCost) {
+        changed = true
+        bestCost = costCandidate
+        aBest = aCandidate
+      }
+    })
+    colors[i] = aBest
+    totalCost += bestCost
   })
-  return totalCost
+  return [totalCost, changed]
 }

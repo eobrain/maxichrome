@@ -2,7 +2,7 @@ import { randInt } from './random.js'
 import Color from './color.js'
 import { step } from './index.js'
 
-const N = 100
+const N = 8
 
 function * colorIndices () {
   for (let i = 0; i < N; ++i) {
@@ -13,6 +13,7 @@ function * colorIndices () {
 const main = () => {
   const $n = document.getElementById('n')
   const $totalCost = document.getElementById('total-cost')
+  const $state = document.getElementById('state')
   const $swatches = document.getElementById('swatches')
   $n.innerHTML = N
 
@@ -41,9 +42,13 @@ const main = () => {
   show()
 
   const iteration = () => {
-    $totalCost.innerHTML = step(model)
+    const [totalCost, changed] = step(model)
+    $totalCost.innerHTML = totalCost
+    $state.innerHTML = changed ? 'Optimizing...' : 'Found optimum.'
     show()
-    setTimeout(iteration, 0)
+    if (changed) {
+      setTimeout(iteration, 0)
+    }
   }
   iteration()
 }
