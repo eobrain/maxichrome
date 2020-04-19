@@ -11,18 +11,19 @@ export const step = colors => {
   let changed = false
   let totalCost = 0
   colors.forEach((_, i) => {
-    const cost = () =>
-      colors.reduce((sum, b) => {
-        const a = colors[i]
-        if (b === a) {
-          return sum
+    const cost = () => {
+      let dEMin = Infinity
+      colors.forEach((_, j) => {
+        if (i === j) {
+          return
         }
-        const dE = deltaE(a.rgb, b.rgb)
-        if (dE === 0.0) {
-          return Infinity
+        const dE = deltaE(colors[i].rgb, colors[j].rgb)
+        if (dE < dEMin) {
+          dEMin = dE
         }
-        return sum + 1 / dE
-      }, 0)
+      })
+      return -dEMin
+    }
     const origA = colors[i]
     let aBest = origA
     let bestCost = cost()
@@ -38,7 +39,7 @@ export const step = colors => {
     colors[i] = aBest
     totalCost += bestCost
   })
-  t = t * 0.99
+  t = t * 0.999
   const nearest = colors.map(a =>
     colors.reduce((min, b) => a === b ? min : Math.min(min, deltaE(a.rgb, b.rgb)), Infinity))
   return [t, totalCost, changed, nearest]
