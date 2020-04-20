@@ -2,7 +2,7 @@ import { randInt } from './random.js'
 import Color from './color.js'
 import Optimizer from './index.js'
 
-const N = 16
+const N = 32
 
 function * colorIndices () {
   for (let i = 0; i < N; ++i) {
@@ -53,7 +53,7 @@ const main = () => {
     $state.innerHTML = changed ? 'Optimizing...' : 'Found optimum.'
 
     $nearest.innerHTML = nearest.map((dE, i) =>
-      `<div style="background-color:${model[i].cssColor()};height:5px;width:${Math.round(2 * dE)}%"></div>`).join('')
+      `<div style="background-color:${model[i].cssColor()};height:5px;width:${100 * dE / N}%"></div>`).join('')
 
     show()
 
