@@ -2,7 +2,7 @@ import cdc from 'https://dev.jspm.io/d3-color-difference'
 import { shuffle } from './random.js'
 
 export default class {
-  constructor (kL = 1, kC = 1, kH = 1) {
+  constructor (kL = 0.5, kC = 8, kH = 2) {
     this.deltaE = cdc.differenceCiede2000Weighted(kL, kC, kH)
     this.temperature = 10
   }
