@@ -44,7 +44,7 @@ const main = () => {
   }
   show()
 
-  const optimizer = new Optimizer()
+  const optimizer = Optimizer()
   let unchangedCount = 1
   const iteration = () => {
     const [t, totalCost, changed, nearest] = optimizer.step(model)

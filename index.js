@@ -3,18 +3,14 @@ import { shuffle } from './random.js'
 
 const State = Object.freeze({ heating: 1, cooling: 2, hillClimbing: 3 })
 
-export default class {
-  constructor (kL = 0.5, kC = 8, kH = 2) {
-    this.deltaE = cdc.differenceCiede2000Weighted(kL, kC, kH)
-    this.temperature = 0.0000001
-    this.state = State.heating
-  }
+export default (kL = 0.5, kC = 8, kH = 2) => {
+  const deltaE = cdc.differenceCiede2000Weighted(kL, kC, kH)
+  let temperature = 0.0000001
+  let state = State.heating
 
-  _acceptanceProbability (dE) {
-    return 1 / (1 + Math.exp(dE / this.temperature))
-  }
+  const acceptanceProbability = dE => 1 / (1 + Math.exp(dE / temperature))
 
-  step (colors) {
+  const step = colors => {
     let acceptedCount = 0
     let totalCount = 0
     let totalCost = 0
@@ -25,7 +21,7 @@ export default class {
           if (i === j) {
             return
           }
-          const dE = this.deltaE(colors[i].rgb, colors[j].rgb)
+          const dE = deltaE(colors[i].rgb, colors[j].rgb)
           if (dE < dEMin) {
             dEMin = dE
           }
@@ -38,7 +34,7 @@ export default class {
       shuffle(origA.perturbations()).forEach(aCandidate => {
         colors[i] = aCandidate
         const costCandidate = cost()
-        if (Math.random() < this._acceptanceProbability(costCandidate - bestCost)) {
+        if (Math.random() < acceptanceProbability(costCandidate - bestCost)) {
           ++acceptedCount
           bestCost = costCandidate
           aBest = aCandidate
@@ -48,18 +44,18 @@ export default class {
       colors[i] = aBest
       totalCost += bestCost
     })
-    switch (this.state) {
+    switch (state) {
       case State.heating:
-        this.temperature *= 1.1
+        temperature *= 1.1
         if (acceptedCount > totalCount / 2) {
-          this.state = State.cooling
+          state = State.cooling
         }
         break
       case State.cooling:
-        this.temperature *= 0.998
+        temperature *= 0.998
         if (acceptedCount === 0) {
-          this.temperature = 0
-          this.state = State.hillClimb
+          temperature = 0
+          state = State.hillClimb
         }
         break
       case State.hillClimb:
@@ -67,7 +63,9 @@ export default class {
     }
     const nearest = colors.map(a =>
       colors.reduce((min, b) =>
-        a === b ? min : Math.min(min, this.deltaE(a.rgb, b.rgb)), Infinity))
-    return [this.temperature, totalCost, this.state !== State.hillClimb || acceptedCount > 0, nearest]
+        a === b ? min : Math.min(min, deltaE(a.rgb, b.rgb)), Infinity))
+    return [temperature, totalCost, state !== State.hillClimb || acceptedCount > 0, nearest]
   }
+
+  return { step }
 }
