@@ -1,6 +1,6 @@
 import { randInt } from './random.js'
 import Color from './color.js'
-import Optimizer from './index.js'
+import Optimizer from './optimizer.js'
 
 const N = 16
 
