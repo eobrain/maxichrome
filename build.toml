@@ -10,8 +10,13 @@ exec="npx webpack --mode=production --config=webpack.config.cjs"
 #exec="npx webpack --mode=development --devtool=inline-source-map"
 
 ["serve"]
-deps=["dist/demo_bundled.js"]
-exec="cd dist && python -m SimpleHTTPServer 8888"
+deps=["web_modules/import-map.json"]
+#exec="npx servor . index.html 8888 --reload --browse"
+exec="python -m SimpleHTTPServer 8888"
 
 ["clean"]
 exec="rm dist/demo_bundled.js"
+
+["web_modules/import-map.json"]
+deps=["package.json"]
+exec="npx snowpack"
