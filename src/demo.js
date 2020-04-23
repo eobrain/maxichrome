@@ -1,6 +1,6 @@
 import maxichrome from './index.js'
 
-const demo = async () => {
+(async () => {
   const $swatches = document.getElementById('swatches')
   const $colorCount = document.getElementById('color-count')
 
@@ -24,6 +24,4 @@ const demo = async () => {
 
   await run()
   $colorCount.onchange = run
-}
-
-window.addEventListener('DOMContentLoaded', demo)
+})()

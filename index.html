@@ -1,7 +1,16 @@
 <html>
 
 <head>
-    <script type="module" src="/src/demo.js"></script>
+    <script defer src="https://unpkg.com/es-module-shims@latest/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "d3-color": "https://unpkg.com/d3-color?module",
+          "d3-color-difference": "https://unpkg.com/d3-color-difference?module"
+        }
+      }
+    </script>
+    <script type="module-shim" src="/src/demo.js"></script>
     <script nomodule src="nomodule.js"></script>
     <link rel="stylesheet" type="text/css" href="main.css">
 </head>
