@@ -1,10 +1,11 @@
-import cdc from 'https://dev.jspm.io/d3-color-difference'
+// import cdc from 'https://dev.jspm.io/d3-color-difference'
+import { differenceCiede2000Weighted } from 'd3-color-difference'
 import { shuffle } from './random.js'
 
 const State = Object.freeze({ heating: 1, cooling: 2, hillClimbing: 3 })
 
 export default (kL = 0.5, kC = 8, kH = 2) => {
-  const deltaE = cdc.differenceCiede2000Weighted(kL, kC, kH)
+  const deltaE = differenceCiede2000Weighted(kL, kC, kH)
   let temperature = 0.0000001
   let state = State.heating
 
