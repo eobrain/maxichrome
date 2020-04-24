@@ -1,12 +1,12 @@
 import maxichrome from './index.js'
 
-(async () => {
+export default async inject => {
   const $swatches = document.getElementById('swatches')
   const $colorCount = document.getElementById('color-count')
 
   const run = async () => {
     const colorCount = $colorCount.value
-    const colors = await maxichrome(colorCount)
+    const colors = await maxichrome(inject)(colorCount)
     while ($swatches.children.length > colorCount) {
       $swatches.lastElementChild.remove()
     }
@@ -24,4 +24,4 @@ import maxichrome from './index.js'
 
   await run()
   $colorCount.onchange = run
-})()
+}

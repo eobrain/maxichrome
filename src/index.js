@@ -7,7 +7,7 @@ import Optimizer from './optimizer.js'
  */
 const waitTillNextTick = () => new Promise(resolve => setTimeout(resolve, 0))
 
-export default async colorCount => {
+export default inject => async colorCount => {
   function * colorIndices () {
     for (let i = 0; i < colorCount; ++i) {
       yield i
@@ -15,10 +15,10 @@ export default async colorCount => {
   }
 
   const colors = [...colorIndices()].map(() =>
-    new Color(randInt(256), randInt(256), randInt(256))
+    new (Color(inject))(randInt(256), randInt(256), randInt(256))
   )
 
-  const optimizer = Optimizer()
+  const optimizer = Optimizer(inject)()
   let unchangedCount = 1
   while (unchangedCount < 100) {
     const [, , changed] = optimizer.step(colors)

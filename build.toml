@@ -1,22 +1,6 @@
-["dist/demo_bundled.js"]
-deps=[
-    "webpack.config.cjs",
-    "src/demo.js",
-    "src/index.js",
-    "src/color.js",
-    "src/random.js",
-    "src/optimizer.js"]
-exec="npx webpack --mode=production --config=webpack.config.cjs"
-#exec="npx webpack --mode=development --devtool=inline-source-map"
-
 ["serve"]
-deps=["web_modules/import-map.json"]
-#exec="npx servor . index.html 8888 --reload --browse"
 exec="python -m SimpleHTTPServer 8888"
 
-["clean"]
-exec="rm dist/demo_bundled.js"
+["test"]
+exec="npx ava"
 
-["web_modules/import-map.json"]
-deps=["package.json"]
-exec="npx snowpack"
