@@ -2,4 +2,7 @@ import maxichrome from './index.js'
 import d3ColorDifference from 'd3-color-difference'
 import d3Color from 'd3-color'
 
-export default maxichrome({ d3Color, d3ColorDifference })
+const rgb = d3Color.rgb
+const differenceCiede2000Weighted = d3ColorDifference.differenceCiede2000Weighted
+
+export default maxichrome({ rgb, differenceCiede2000Weighted })

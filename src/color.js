@@ -150,10 +150,10 @@ const NAMES = {
   '#ffffff': 'white'
 }
 
-export default ({ d3Color }) => {
+export default ({ rgb }) => {
   class Color {
     constructor (r, g, b) {
-      this.rgb = d3Color.rgb(r, g, b)
+      this.rgb = rgb(r, g, b)
     }
 
     invert () {
@@ -184,14 +184,14 @@ export default ({ d3Color }) => {
       const r = clamp(this.rgb.r + (delta.r || 0))
       const g = clamp(this.rgb.g + (delta.g || 0))
       const b = clamp(this.rgb.b + (delta.b || 0))
-      this.rgb = d3Color.rgb(r, g, b)
+      this.rgb = rgb(r, g, b)
     }
 
     subtract (delta) {
       const r = clamp(this.rgb.r - (delta.r || 0))
       const g = clamp(this.rgb.g - (delta.g || 0))
       const b = clamp(this.rgb.b - (delta.b || 0))
-      this.rgb = d3Color.rgb(r, g, b)
+      this.rgb = rgb(r, g, b)
     }
 
     warmth () {
