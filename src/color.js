@@ -1,4 +1,3 @@
-// import dc from 'https://dev.jspm.io/d3-color'
 import { rgb } from 'd3-color'
 
 const hex = n => n.toString(16).replace(/^(.)$/, '0$1')
