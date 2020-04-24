@@ -1,6 +1,12 @@
 import { randInt } from './random.js'
-import Color from './color.js'
-import Optimizer from './optimizer.js'
+import color from './color.js'
+import optimizer from './optimizer.js'
+import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
+import { rgb } from 'https://unpkg.com/d3-color?module'
+const d3Color = { rgb }
+const d3ColorDifference = { differenceCiede2000Weighted }
+const Color = color({ d3Color })
+const Optimizer = optimizer({ d3ColorDifference })
 
 const colorCount = 20
 

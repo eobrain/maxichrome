@@ -1,11 +1,7 @@
-import maxichrome from '../src/index.js'
-import d3ColorDifference from 'd3-color-difference'
-import d3Color from 'd3-color'
+import maxichrome from '../src/index_node.js'
 import test from 'ava'
 
-const inject = { d3Color, d3ColorDifference }
-
 test('count', async t => {
-  const colors = await maxichrome(inject)(2)
+  const colors = await maxichrome(2)
   t.is(colors.length, 2)
 })
