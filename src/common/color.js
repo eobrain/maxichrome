@@ -1,7 +1,5 @@
 const hex = n => n.toString(16).replace(/^(.)$/, '0$1')
 
-const clamp = x => Math.max(0, Math.min(255, x))
-
 function * near (x) {
   for (let i = Math.max(0, x - 1); i <= Math.min(255, x + 1); ++i) {
     yield i
@@ -180,20 +178,6 @@ export default (dependencies) => {
       return result
     }
 
-    add (delta) {
-      const r = clamp(this.rgb.r + (delta.r || 0))
-      const g = clamp(this.rgb.g + (delta.g || 0))
-      const b = clamp(this.rgb.b + (delta.b || 0))
-      this.rgb = dependencies.rgb(r, g, b)
-    }
-
-    subtract (delta) {
-      const r = clamp(this.rgb.r - (delta.r || 0))
-      const g = clamp(this.rgb.g - (delta.g || 0))
-      const b = clamp(this.rgb.b - (delta.b || 0))
-      this.rgb = dependencies.rgb(r, g, b)
-    }
-
     warmth () {
       return 2 * this.rgb.r - this.rgb.b - this.rgb.g
     }
@@ -207,6 +191,13 @@ export default (dependencies) => {
     cssColor () {
       const hexString = '#' + hex(this.rgb.r) + hex(this.rgb.g) + hex(this.rgb.b)
       return NAMES[hexString] || hexString
+    }
+
+    deltaE (kL, kC, kH, that) {
+      return dependencies.differenceCiede2000Weighted(kL, kC, kH)(
+        this.rgb,
+        that.rgb
+      )
     }
   }
 

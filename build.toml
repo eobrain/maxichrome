@@ -4,3 +4,7 @@ exec="python -m SimpleHTTPServer 8888"
 ["test"]
 exec="npx ava"
 
+["perf.csv"]
+deps=["src/node/perf.js"]
+exec="node $<"
+

@@ -1,14 +1,13 @@
 import { randInt } from '../common/random.js'
 import ColorInject from '../common/color.js'
-import OptimizerInject from '../common/optimizer.js'
+import Optimizer from '../common/optimizer.js'
 import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
 import { rgb } from 'https://unpkg.com/d3-color?module'
 
 const dependencies = { rgb, differenceCiede2000Weighted }
 const Color = ColorInject(dependencies)
-const Optimizer = OptimizerInject(dependencies)
 
-const colorCount = 20
+const colorCount = 5
 
 function * colorIndices () {
   for (let i = 0; i < colorCount; ++i) {
@@ -19,6 +18,7 @@ function * colorIndices () {
 const main = () => {
   const $n = document.getElementById('n')
   const $t = document.getElementById('t')
+  const $duration = document.getElementById('duration')
   const $totalCost = document.getElementById('total-cost')
   const $state = document.getElementById('state')
   const $swatches = document.getElementById('swatches')
@@ -52,6 +52,9 @@ const main = () => {
 
   const optimizer = Optimizer()
   let unchangedCount = 1
+
+  /* global performance */
+  const start = performance.now()
   const iteration = () => {
     const [t, totalCost, changed, nearest] = optimizer.step(colors)
     $totalCost.innerHTML = totalCost
@@ -66,6 +69,9 @@ const main = () => {
     unchangedCount = changed ? 0 : unchangedCount + 1
     if (unchangedCount < 100) {
       setTimeout(iteration, 0)
+    } else {
+      const elapsed = performance.now() - start
+      $duration.innerHTML = elapsed / 1000
     }
   }
   iteration()

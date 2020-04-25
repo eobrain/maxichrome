@@ -2,8 +2,7 @@ import { shuffle } from './random.js'
 
 const State = Object.freeze({ heating: 1, cooling: 2, hillClimbing: 3 })
 
-export default dependencies => (kL = 0.5, kC = 8, kH = 2) => {
-  const deltaE = dependencies.differenceCiede2000Weighted(kL, kC, kH)
+export default (kL = 0.5, kC = 8, kH = 2) => {
   let temperature = 0.0000001
   let state = State.heating
 
@@ -20,7 +19,7 @@ export default dependencies => (kL = 0.5, kC = 8, kH = 2) => {
           if (i === j) {
             return
           }
-          const dE = deltaE(colors[i].rgb, colors[j].rgb)
+          const dE = colors[i].deltaE(kL, kC, kH, colors[j])
           if (dE < dEMin) {
             dEMin = dE
           }
@@ -62,7 +61,7 @@ export default dependencies => (kL = 0.5, kC = 8, kH = 2) => {
     }
     const nearest = colors.map(a =>
       colors.reduce((min, b) =>
-        a === b ? min : Math.min(min, deltaE(a.rgb, b.rgb)), Infinity))
+        a === b ? min : Math.min(min, a.deltaE(kL, kC, kH, b)), Infinity))
     return [temperature, totalCost, state !== State.hillClimb || acceptedCount > 0, nearest]
   }
 

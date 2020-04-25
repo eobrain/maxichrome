@@ -1,0 +1,77 @@
+import fs from 'fs'
+import maxichromeDev from './index_dev.js'
+
+const repetitions = 20
+
+const CsvOut = (path, columns) => new Promise((resolve, reject) => {
+  const promises = []
+  const write = (...args) => {
+    promises.push(new Promise((resolve, reject) => {
+      fs.appendFile(path, args.join() + '\n', err => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve()
+        }
+      })
+    }))
+  }
+
+  const close = () => Promise.all(promises)
+
+  fs.writeFile(path, columns.join() + '\n', err => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve({ write, close })
+    }
+  })
+})
+
+const Stats = () => {
+  let n = 0
+  let sum = 0
+  let sumSq = 0
+  const put = x => {
+    ++n
+    sum += x
+    sumSq += x * x
+  }
+  const mean = () => sum / n
+  const stddev = () => Math.sqrt(n * sumSq - sum * sum) / n
+  const low = () => mean() - stddev() * 2
+  const high = () => mean() + stddev() * 2
+  return { put, mean, stddev, low, high }
+}
+
+const kL = 0.5
+const kC = 8
+const kH = 2
+
+;(async () => {
+  const csvOut = await CsvOut('perf.csv', ['n', 'time', 'dE', 'dEStddev'])
+  const n = 4
+  const elapsedStats = Stats()
+  const dEStats = Stats()
+  const dEStddevStats = Stats()
+  for (let i = 0; i < repetitions; ++i) {
+    const start = Date.now()
+    const colors = await maxichromeDev(kL, kC, kH, n)
+    const dt = (Date.now() - start) / 1000.0
+    const colorStats = Stats()
+    for (let i = 0; i < n; ++i) {
+      for (let j = i + 1; j < n; ++j) {
+        colorStats.put(colors[i].deltaE(kL, kC, kH, colors[j]))
+      }
+    }
+    elapsedStats.put(dt)
+    dEStats.put(colorStats.mean())
+    dEStddevStats.put(colorStats.stddev())
+  }
+  const time = elapsedStats.mean()
+  const dE = dEStats.mean()
+  const dEStddev = dEStddevStats.mean()
+  csvOut.write(n, time, dE, dEStddev)
+
+  await csvOut.close()
+})()
