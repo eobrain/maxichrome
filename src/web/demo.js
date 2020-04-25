@@ -1,29 +1,25 @@
-import maxichrome from '../common/index.js'
-import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
-import { rgb } from 'https://unpkg.com/d3-color?module'
+import maxichrome from '../web/index.js'
 
-(async () => {
-  const $swatches = document.getElementById('swatches')
-  const $colorCount = document.getElementById('color-count')
+const $swatches = document.getElementById('swatches')
+const $colorCount = document.getElementById('color-count')
 
-  const run = async () => {
-    const colorCount = $colorCount.value
-    const colors = await maxichrome({ rgb, differenceCiede2000Weighted })(colorCount)
-    while ($swatches.children.length > colorCount) {
-      $swatches.lastElementChild.remove()
-    }
-    while ($swatches.children.length < colorCount) {
-      const $swatch = document.createElement('SPAN')
-      $swatch.setAttribute('class', 'swatch')
-      $swatches.appendChild($swatch)
-    }
-    colors.forEach((color, i) => {
-      const $swatch = $swatches.children[i]
-      $swatch.style.setProperty('background-color', color)
-      $swatch.innerHTML = ' ' + color + ' '
-    })
+const run = async () => {
+  const colorCount = $colorCount.value
+  const colors = await maxichrome(colorCount)
+  while ($swatches.children.length > colorCount) {
+    $swatches.lastElementChild.remove()
   }
+  while ($swatches.children.length < colorCount) {
+    const $swatch = document.createElement('SPAN')
+    $swatch.setAttribute('class', 'swatch')
+    $swatches.appendChild($swatch)
+  }
+  colors.forEach((color, i) => {
+    const $swatch = $swatches.children[i]
+    $swatch.style.setProperty('background-color', color)
+    $swatch.innerHTML = ' ' + color + ' '
+  })
+}
 
-  await run()
-  $colorCount.onchange = run
-})()
+run()
+$colorCount.onchange = run

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Generate a set of maximally distinguishable colors",
   "type": "module",
-  "main": "src/index_node.js",
+  "main": "src/node/index.node",
   "scripts": {
     "test": "ava",
     "build": "bajel"

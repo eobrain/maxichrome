@@ -150,10 +150,10 @@ const NAMES = {
   '#ffffff': 'white'
 }
 
-export default ({ rgb }) => {
+export default (dependencies) => {
   class Color {
     constructor (r, g, b) {
-      this.rgb = rgb(r, g, b)
+      this.rgb = dependencies.rgb(r, g, b)
     }
 
     invert () {
@@ -184,14 +184,14 @@ export default ({ rgb }) => {
       const r = clamp(this.rgb.r + (delta.r || 0))
       const g = clamp(this.rgb.g + (delta.g || 0))
       const b = clamp(this.rgb.b + (delta.b || 0))
-      this.rgb = rgb(r, g, b)
+      this.rgb = dependencies.rgb(r, g, b)
     }
 
     subtract (delta) {
       const r = clamp(this.rgb.r - (delta.r || 0))
       const g = clamp(this.rgb.g - (delta.g || 0))
       const b = clamp(this.rgb.b - (delta.b || 0))
-      this.rgb = rgb(r, g, b)
+      this.rgb = dependencies.rgb(r, g, b)
     }
 
     warmth () {

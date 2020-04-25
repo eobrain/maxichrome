@@ -1,10 +1,12 @@
 import { randInt } from '../common/random.js'
-import color from '../common/color.js'
-import optimizer from '../common/optimizer.js'
+import ColorInject from '../common/color.js'
+import OptimizerInject from '../common/optimizer.js'
 import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
 import { rgb } from 'https://unpkg.com/d3-color?module'
-const Color = color({ rgb })
-const Optimizer = optimizer({ differenceCiede2000Weighted })
+
+const dependencies = { rgb, differenceCiede2000Weighted }
+const Color = ColorInject(dependencies)
+const Optimizer = OptimizerInject(dependencies)
 
 const N = 16
 
