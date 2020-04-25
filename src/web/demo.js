@@ -1,12 +1,14 @@
-import maxichrome from './index.js'
+import maxichrome from '../common/index.js'
+import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
+import { rgb } from 'https://unpkg.com/d3-color?module'
 
-export default async inject => {
+(async () => {
   const $swatches = document.getElementById('swatches')
   const $colorCount = document.getElementById('color-count')
 
   const run = async () => {
     const colorCount = $colorCount.value
-    const colors = await maxichrome(inject)(colorCount)
+    const colors = await maxichrome({ rgb, differenceCiede2000Weighted })(colorCount)
     while ($swatches.children.length > colorCount) {
       $swatches.lastElementChild.remove()
     }
@@ -24,4 +26,4 @@ export default async inject => {
 
   await run()
   $colorCount.onchange = run
-}
+})()

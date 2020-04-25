@@ -1,4 +1,4 @@
-import maxichrome from './index.js'
+import maxichrome from '../common/index.js'
 import d3ColorDifference from 'd3-color-difference'
 import d3Color from 'd3-color'
 
