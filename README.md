@@ -31,10 +31,7 @@ The above code prints:
 <head>
     <script type="module">
         import maxichrome from 'https://unpkg.com/maxichrome@0.0.2/src/web/index.js?module'
-
         (async () => {
-            const $list = document.getElementById('list')
-
             const colors = await maxichrome(5)
 
             for(const color of colors) {
