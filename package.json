@@ -1,6 +1,6 @@
 {
   "name": "maxichrome",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generate a set of maximally distinguishable colors",
   "type": "module",
   "main": "src/node/index.js",
