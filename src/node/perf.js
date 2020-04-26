@@ -49,29 +49,31 @@ const kC = 8
 const kH = 2
 
 ;(async () => {
-  const csvOut = await CsvOut('perf.csv', ['n', 'time', 'dE', 'dEStddev'])
-  const n = 4
-  const elapsedStats = Stats()
-  const dEStats = Stats()
-  const dEStddevStats = Stats()
-  for (let i = 0; i < repetitions; ++i) {
-    const start = Date.now()
-    const colors = await maxichromeDev(kL, kC, kH, n)
-    const dt = (Date.now() - start) / 1000.0
-    const colorStats = Stats()
-    for (let i = 0; i < n; ++i) {
-      for (let j = i + 1; j < n; ++j) {
-        colorStats.put(colors[i].deltaE(kL, kC, kH, colors[j]))
+  const csvOut = await CsvOut('perf.csv', ['n', 'coolingRate', 'time', 'dE', 'dEStddev'])
+  for (const coolingRate of [Infinity, 0.2, 0.02, 0.002]) {
+    const n = 20
+    const elapsedStats = Stats()
+    const dEStats = Stats()
+    const dEStddevStats = Stats()
+    for (let i = 0; i < repetitions; ++i) {
+      const start = Date.now()
+      const colors = await maxichromeDev(kL, kC, kH, n, coolingRate)
+      const dt = (Date.now() - start) / 1000.0
+      const colorStats = Stats()
+      for (let i = 0; i < n; ++i) {
+        for (let j = i + 1; j < n; ++j) {
+          colorStats.put(colors[i].deltaE(kL, kC, kH, colors[j]))
+        }
       }
+      elapsedStats.put(dt)
+      dEStats.put(colorStats.mean())
+      dEStddevStats.put(colorStats.stddev())
     }
-    elapsedStats.put(dt)
-    dEStats.put(colorStats.mean())
-    dEStddevStats.put(colorStats.stddev())
+    const time = elapsedStats.mean()
+    const dE = dEStats.mean()
+    const dEStddev = dEStddevStats.mean()
+    console.table({ n, coolingRate, time, dE, dEStddev })
+    csvOut.write(n, coolingRate, time, dE, dEStddev)
   }
-  const time = elapsedStats.mean()
-  const dE = dEStats.mean()
-  const dEStddev = dEStddevStats.mean()
-  csvOut.write(n, time, dE, dEStddev)
-
   await csvOut.close()
 })()

@@ -5,6 +5,6 @@ exec="python -m SimpleHTTPServer 8888"
 exec="npx ava"
 
 ["perf.csv"]
-deps=["src/node/perf.js"]
+deps=["src/node/perf.js", "src/common/optimizer.js"]
 exec="node $<"
 

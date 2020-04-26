@@ -2,9 +2,9 @@ import { shuffle } from './random.js'
 
 const State = Object.freeze({ heating: 1, cooling: 2, hillClimbing: 3 })
 
-export default (kL = 0.5, kC = 8, kH = 2) => {
-  let temperature = 0.0000001
-  let state = State.heating
+export default (kL = 0.5, kC = 8, kH = 2, coolingRate = 0.002) => {
+  let temperature = coolingRate === Infinity ? 0 : 0.0000001
+  let state = coolingRate === Infinity ? State.heating : State.heating
 
   const acceptanceProbability = dE => 1 / (1 + Math.exp(dE / temperature))
 
@@ -50,7 +50,7 @@ export default (kL = 0.5, kC = 8, kH = 2) => {
         }
         break
       case State.cooling:
-        temperature *= 0.998
+        temperature *= 1 - coolingRate
         if (acceptedCount === 0) {
           temperature = 0
           state = State.hillClimb
@@ -62,7 +62,7 @@ export default (kL = 0.5, kC = 8, kH = 2) => {
     const nearest = colors.map(a =>
       colors.reduce((min, b) =>
         a === b ? min : Math.min(min, a.deltaE(kL, kC, kH, b)), Infinity))
-    return [temperature, totalCost, state !== State.hillClimb || acceptedCount > 0, nearest]
+    return [temperature, totalCost, acceptedCount > 0, nearest]
   }
 
   return { step }
