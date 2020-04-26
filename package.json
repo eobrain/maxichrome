@@ -1,6 +1,6 @@
 {
   "name": "maxichrome",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generate a set of maximally distinguishable colors",
   "type": "module",
   "main": "src/node/index.js",
@@ -22,6 +22,7 @@
     "d3-color-difference": "^0.1.3"
   },
   "devDependencies": {
-    "ava": "^3.7.1"
+    "ava": "^3.7.1",
+    "bajel": "^0.3.7"
   }
 }
