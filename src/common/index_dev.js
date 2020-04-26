@@ -23,7 +23,7 @@ export default dependencies => {
 
     const optimizer = Optimizer(kL, kC, kH)
     while (true) {
-      const [, changed] = optimizer.step(colors)
+      const [, changed] = optimizer.step(colors, [])
       if (!changed) {
         return colors
       }

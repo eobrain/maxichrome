@@ -1,17 +1,17 @@
 import { shuffle } from './random.js'
 
 export default (kL = 0.5, kC = 8, kH = 2) => {
-  const step = colors => {
+  const step = (colors, avoid) => {
     let acceptedCount = 0
     let totalCost = 0
     colors.forEach((_, i) => {
       const cost = () => {
         let dEMin = Infinity
-        colors.forEach((_, j) => {
+        ;[...colors, ...avoid].forEach((colorJ, j) => {
           if (i === j) {
             return
           }
-          const dE = colors[i].deltaE(kL, kC, kH, colors[j])
+          const dE = colors[i].deltaE(kL, kC, kH, colorJ)
           if (dE < dEMin) {
             dEMin = dE
           }

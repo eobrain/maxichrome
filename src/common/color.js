@@ -1,3 +1,5 @@
+import { ensures } from './contract.js'
+
 const hex = n => n.toString(16).replace(/^(.)$/, '0$1')
 
 function * near (x) {
@@ -150,8 +152,16 @@ const NAMES = {
 
 export default (dependencies) => {
   class Color {
-    constructor (r, g, b) {
-      this.rgb = dependencies.rgb(r, g, b)
+    constructor (rOrCssColor, g, b) {
+      if (g === undefined && b === undefined) {
+        this.rgb = dependencies.rgb(dependencies.color(rOrCssColor))
+      } else {
+        this.rgb = dependencies.rgb(rOrCssColor, g, b)
+      }
+      ensures(() =>
+        this.rgb.r !== undefined &&
+        this.rgb.g !== undefined &&
+        this.rgb.b !== undefined)
     }
 
     invert () {

@@ -2,9 +2,9 @@ import { randInt } from '../common/random.js'
 import ColorInject from '../common/color.js'
 import Optimizer from '../common/optimizer.js'
 import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
-import { rgb } from 'https://unpkg.com/d3-color?module'
+import { rgb, color } from 'https://unpkg.com/d3-color?module'
 
-const dependencies = { rgb, differenceCiede2000Weighted }
+const dependencies = { rgb, color, differenceCiede2000Weighted }
 const Color = ColorInject(dependencies)
 
 const N = 16
@@ -111,7 +111,7 @@ const main = () => {
     const optimizer = Optimizer(kL, kC, kH)
     let unchangedCount = 1
     const iteration = () => {
-      const [, changed] = optimizer.step(model)
+      const [, changed] = optimizer.step(model, [])
 
       show()
 

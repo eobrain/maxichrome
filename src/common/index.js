@@ -10,7 +10,7 @@ const waitTillNextTick = () => new Promise(resolve => setTimeout(resolve, 0))
 export default dependencies => {
   const Color = ColorInject(dependencies)
 
-  return async (colorCount) => {
+  return async (colorCount, avoid = []) => {
     function * colorIndices () {
       for (let i = 0; i < colorCount; ++i) {
         yield i
@@ -23,7 +23,10 @@ export default dependencies => {
 
     const optimizer = Optimizer()
     while (true) {
-      const [, changed] = optimizer.step(colors)
+      const [, changed] = optimizer.step(
+        colors,
+        avoid.map(cssColor => new Color(cssColor))
+      )
       if (!changed) {
         colors.sort((a, b) => b.warmth() - a.warmth())
         return colors.map(c => c.cssColor())

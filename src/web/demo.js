@@ -1,25 +1,32 @@
 import maxichrome from '../web/index.js'
 
-const $swatches = document.getElementById('swatches')
-const $colorCount = document.getElementById('color-count')
+// Defined as id in HTML file:
+/* global
+    colorCountElement
+    swatchesAreaElement
+    avoidColorElement
+*/
 
 const run = async () => {
-  const colorCount = $colorCount.value
-  const colors = await maxichrome(colorCount)
-  while ($swatches.children.length > colorCount) {
-    $swatches.lastElementChild.remove()
+  const colorCount = colorCountElement.value
+  const avoidColor = avoidColorElement.value
+  const colors = await maxichrome(colorCount, [avoidColor])
+  while (swatchesAreaElement.children.length > colorCount) {
+    swatchesAreaElement.lastElementChild.remove()
   }
-  while ($swatches.children.length < colorCount) {
-    const $swatch = document.createElement('SPAN')
-    $swatch.setAttribute('class', 'swatch')
-    $swatches.appendChild($swatch)
+  while (swatchesAreaElement.children.length < colorCount) {
+    const swatchElement = document.createElement('SPAN')
+    swatchElement.setAttribute('class', 'swatch')
+    swatchesAreaElement.appendChild(swatchElement)
   }
   colors.forEach((color, i) => {
-    const $swatch = $swatches.children[i]
-    $swatch.style.setProperty('background-color', color)
-    $swatch.innerHTML = ' ' + color + ' '
+    const swatchElement = swatchesAreaElement.children[i]
+    swatchElement.style.setProperty('color', avoidColor)
+    swatchElement.style.setProperty('background-color', color)
+    swatchElement.innerHTML = ' ' + color + ' '
   })
 }
 
 run()
-$colorCount.onchange = run
+colorCountElement.onchange = run
+avoidColorElement.onchange = run
