@@ -19,7 +19,7 @@ const CsvOut = (path, columns) => new Promise((resolve, reject) => {
 
   const close = () => Promise.all(promises)
 
-  fs.writeFile(path, columns.join() + '\n', err => {
+  fs.writeFile(path, columns + '\n', err => {
     if (err) {
       reject(err)
     } else {
@@ -32,16 +32,26 @@ const Stats = () => {
   let n = 0
   let sum = 0
   let sumSq = 0
+  let min_ = Infinity
+  let max_ = -Infinity
+  const dist_ = []
   const put = x => {
     ++n
     sum += x
     sumSq += x * x
+    min_ = Math.min(min_, x)
+    max_ = Math.max(max_, x)
+    const bucket = 5 * Math.round(x / 5)
+    dist_[bucket] = (dist_[bucket] || 0) + 1
   }
   const mean = () => sum / n
   const stddev = () => Math.sqrt(n * sumSq - sum * sum) / n
+  const dist = () => dist_
+  const min = () => min_
   const low = () => mean() - stddev() * 2
   const high = () => mean() + stddev() * 2
-  return { put, mean, stddev, low, high }
+  const max = () => max_
+  return { put, min, low, mean, high, max, stddev, dist }
 }
 
 const kL = 0.5
@@ -49,9 +59,9 @@ const kC = 8
 const kH = 2
 
 ;(async () => {
-  const csvOut = await CsvOut('perf.csv', ['n', 'coolingRate', 'time', 'dE', 'dEStddev'])
+  const csvOut = await CsvOut('perf.csv', 'n, coolingRate, time, dEMin, dELow, dist')
   for (const coolingRate of [Infinity, 0.2, 0.02, 0.002]) {
-    const n = 20
+    const n = 6
     const elapsedStats = Stats()
     const dEStats = Stats()
     const dEStddevStats = Stats()
@@ -70,10 +80,11 @@ const kH = 2
       dEStddevStats.put(colorStats.stddev())
     }
     const time = elapsedStats.mean()
-    const dE = dEStats.mean()
-    const dEStddev = dEStddevStats.mean()
-    console.table({ n, coolingRate, time, dE, dEStddev })
-    csvOut.write(n, coolingRate, time, dE, dEStddev)
+    const dEMin = dEStats.min()
+    const dELow = dEStats.low()
+    const dist = dEStats.dist()
+    console.table({ n, coolingRate, time, dEMin, dELow, dist })
+    csvOut.write(n, coolingRate, time, dEMin, dELow, dist)
   }
   await csvOut.close()
 })()
