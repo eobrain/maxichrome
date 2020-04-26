@@ -5,7 +5,7 @@ const $colorCount = document.getElementById('color-count')
 
 const run = async () => {
   const colorCount = $colorCount.value
-  const colors = await maxichrome(colorCount)
+  const colors = await maxichrome(colorCount, 10)
   while ($swatches.children.length > colorCount) {
     $swatches.lastElementChild.remove()
   }

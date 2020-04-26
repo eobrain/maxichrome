@@ -1,7 +1,7 @@
 import fs from 'fs'
 import maxichromeDev from './index_dev.js'
 
-const repetitions = 20
+const repetitions = 100
 
 const CsvOut = (path, columns) => new Promise((resolve, reject) => {
   const promises = []
@@ -41,7 +41,7 @@ const Stats = () => {
     sumSq += x * x
     min_ = Math.min(min_, x)
     max_ = Math.max(max_, x)
-    const bucket = 5 * Math.round(x / 5)
+    const bucket = 2 * Math.round(x / 2)
     dist_[bucket] = (dist_[bucket] || 0) + 1
   }
   const mean = () => sum / n
@@ -59,14 +59,15 @@ const kC = 8
 const kH = 2
 
 ;(async () => {
-  const csvOut = await CsvOut('perf.csv', 'n, time, dEMin, dELow, dist')
-  for (const n of [2, 3, 5, 10, 15, 20]) {
+  const csvOut = await CsvOut('perf.csv', 'n, tries, time, dEMin, dELow, dEMean, dist, roughness')
+  for (let tries = 1; tries <= 5; ++tries) {
+    const n = 7
     const elapsedStats = Stats()
     const dEStats = Stats()
     const dEStddevStats = Stats()
     for (let i = 0; i < repetitions; ++i) {
       const start = Date.now()
-      const colors = await maxichromeDev(kL, kC, kH, n)
+      const colors = await maxichromeDev(kL, kC, kH, n, tries)
       const dt = (Date.now() - start) / 1000.0
       const colorStats = Stats()
       for (let i = 0; i < n; ++i) {
@@ -79,11 +80,13 @@ const kH = 2
       dEStddevStats.put(colorStats.stddev())
     }
     const time = elapsedStats.mean()
+    const dEMean = dEStats.mean()
     const dEMin = dEStats.min()
     const dELow = dEStats.low()
     const dist = dEStats.dist()
-    console.table({ n, time, dEMin, dELow, dist })
-    csvOut.write(n, time, dEMin, dELow, dist)
+    const roughness = dEStddevStats.mean()
+    console.table({ n, tries, time, dEMin, dELow, dEMean, dist, roughness })
+    csvOut.write(n, tries, time, dEMin, dELow, dEMean, dist, roughness)
   }
   await csvOut.close()
 })()
