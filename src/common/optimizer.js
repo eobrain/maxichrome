@@ -7,11 +7,17 @@ export default (kL = 0.5, kC = 8, kH = 2) => {
     colors.forEach((_, i) => {
       const cost = () => {
         let dEMin = Infinity
-        ;[...colors, ...avoid].forEach((colorJ, j) => {
+        colors.forEach((colorJ, j) => {
           if (i === j) {
             return
           }
           const dE = colors[i].deltaE(kL, kC, kH, colorJ)
+          if (dE < dEMin) {
+            dEMin = dE
+          }
+        })
+        avoid.forEach(avoidColor => {
+          const dE = colors[i].deltaE(kL, kC, kH, avoidColor)
           if (dE < dEMin) {
             dEMin = dE
           }
