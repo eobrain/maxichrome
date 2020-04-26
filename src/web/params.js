@@ -111,7 +111,7 @@ const main = () => {
     const optimizer = Optimizer(kL, kC, kH)
     let unchangedCount = 1
     const iteration = () => {
-      const [, , changed] = optimizer.step(model)
+      const [, changed] = optimizer.step(model)
 
       show()
 

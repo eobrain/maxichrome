@@ -22,10 +22,11 @@ export default dependencies => {
     )
 
     const optimizer = Optimizer()
-    let unchangedCount = 1
-    while (unchangedCount < 100) {
-      const [, , changed] = optimizer.step(colors)
-      unchangedCount = changed ? 0 : unchangedCount + 1
+    while (true) {
+      const [, changed] = optimizer.step(colors)
+      if (!changed) {
+        break
+      }
       waitTillNextTick()
     }
     return colors.map(c => c.cssColor())

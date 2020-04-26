@@ -1,16 +1,8 @@
 import { shuffle } from './random.js'
 
-const State = Object.freeze({ heating: 1, cooling: 2, hillClimbing: 3 })
-
-export default (kL = 0.5, kC = 8, kH = 2, coolingRate = 0.002) => {
-  let temperature = coolingRate === Infinity ? 0 : 0.0000001
-  let state = coolingRate === Infinity ? State.heating : State.heating
-
-  const acceptanceProbability = dE => 1 / (1 + Math.exp(dE / temperature))
-
+export default (kL = 0.5, kC = 8, kH = 2) => {
   const step = colors => {
     let acceptedCount = 0
-    let totalCount = 0
     let totalCost = 0
     colors.forEach((_, i) => {
       const cost = () => {
@@ -32,37 +24,19 @@ export default (kL = 0.5, kC = 8, kH = 2, coolingRate = 0.002) => {
       shuffle(origA.perturbations()).forEach(aCandidate => {
         colors[i] = aCandidate
         const costCandidate = cost()
-        if (Math.random() < acceptanceProbability(costCandidate - bestCost)) {
+        if (costCandidate < bestCost) {
           ++acceptedCount
           bestCost = costCandidate
           aBest = aCandidate
         }
-        ++totalCount
       })
       colors[i] = aBest
       totalCost += bestCost
     })
-    switch (state) {
-      case State.heating:
-        temperature *= 1.1
-        if (acceptedCount > totalCount / 2) {
-          state = State.cooling
-        }
-        break
-      case State.cooling:
-        temperature *= 1 - coolingRate
-        if (acceptedCount === 0) {
-          temperature = 0
-          state = State.hillClimb
-        }
-        break
-      case State.hillClimb:
-        break
-    }
     const nearest = colors.map(a =>
       colors.reduce((min, b) =>
         a === b ? min : Math.min(min, a.deltaE(kL, kC, kH, b)), Infinity))
-    return [temperature, totalCost, acceptedCount > 0, nearest]
+    return [totalCost, acceptedCount > 0, nearest]
   }
 
   return { step }

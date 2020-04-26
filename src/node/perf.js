@@ -59,15 +59,14 @@ const kC = 8
 const kH = 2
 
 ;(async () => {
-  const csvOut = await CsvOut('perf.csv', 'n, coolingRate, time, dEMin, dELow, dist')
-  for (const coolingRate of [Infinity, 0.2, 0.02, 0.002]) {
-    const n = 6
+  const csvOut = await CsvOut('perf.csv', 'n, time, dEMin, dELow, dist')
+  for (const n of [2, 3, 5, 10, 15, 20]) {
     const elapsedStats = Stats()
     const dEStats = Stats()
     const dEStddevStats = Stats()
     for (let i = 0; i < repetitions; ++i) {
       const start = Date.now()
-      const colors = await maxichromeDev(kL, kC, kH, n, coolingRate)
+      const colors = await maxichromeDev(kL, kC, kH, n)
       const dt = (Date.now() - start) / 1000.0
       const colorStats = Stats()
       for (let i = 0; i < n; ++i) {
@@ -83,8 +82,8 @@ const kH = 2
     const dEMin = dEStats.min()
     const dELow = dEStats.low()
     const dist = dEStats.dist()
-    console.table({ n, coolingRate, time, dEMin, dELow, dist })
-    csvOut.write(n, coolingRate, time, dEMin, dELow, dist)
+    console.table({ n, time, dEMin, dELow, dist })
+    csvOut.write(n, time, dEMin, dELow, dist)
   }
   await csvOut.close()
 })()

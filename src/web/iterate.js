@@ -17,7 +17,6 @@ function * colorIndices () {
 
 const main = () => {
   const $n = document.getElementById('n')
-  const $t = document.getElementById('t')
   const $duration = document.getElementById('duration')
   const $totalCost = document.getElementById('total-cost')
   const $state = document.getElementById('state')
@@ -56,9 +55,8 @@ const main = () => {
   /* global performance */
   const start = performance.now()
   const iteration = () => {
-    const [t, totalCost, changed, nearest] = optimizer.step(colors)
+    const [totalCost, changed, nearest] = optimizer.step(colors)
     $totalCost.innerHTML = totalCost
-    $t.innerHTML = t
     $state.innerHTML = changed ? 'Optimizing...' : 'Found optimum.'
 
     $nearest.innerHTML = nearest.map((dE, i) =>
