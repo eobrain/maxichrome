@@ -19,4 +19,5 @@ test('minimum deltaE', async t => {
   }
 
   t.true(dEMin < 60, `Expecting dEMin ${dEMin} to be < 60`)
+  // t.true(dEMax < dEMin * 2, `Expecting dEMax ${dEMax} to be <${dEMin * 2}`)
 })

@@ -1,28 +1,37 @@
 import { shuffle } from './random.js'
 
+const arrayOf = makeElement => n => [...Array(n)].map((_, i) => makeElement(i))
+
+const Stats = () => {
+  let min_ = Infinity
+  const put = x => {
+    min_ = Math.min(min_, x)
+  }
+  const min = () => min_
+  return { put, min }
+}
+
 export default (kL = 0.5, kC = 8, kH = 2) => {
   const step = (colors, avoid) => {
     let acceptedCount = 0
     let totalCost = 0
+    const dEMatrix = arrayOf(() => [])(colors.length)
     colors.forEach((_, i) => {
       const cost = () => {
-        let dEMin = Infinity
+        const stats = Stats()
         colors.forEach((colorJ, j) => {
           if (i === j) {
             return
           }
           const dE = colors[i].deltaE(kL, kC, kH, colorJ)
-          if (dE < dEMin) {
-            dEMin = dE
-          }
+          stats.put(dE)
+          dEMatrix[i][j] = dE
         })
         avoid.forEach(avoidColor => {
           const dE = colors[i].deltaE(kL, kC, kH, avoidColor)
-          if (dE < dEMin) {
-            dEMin = dE
-          }
+          stats.put(dE)
         })
-        return -dEMin
+        return -stats.min()
       }
       const origA = colors[i]
       let aBest = origA
@@ -39,10 +48,7 @@ export default (kL = 0.5, kC = 8, kH = 2) => {
       colors[i] = aBest
       totalCost += bestCost
     })
-    const nearest = colors.map(a =>
-      colors.reduce((min, b) =>
-        a === b ? min : Math.min(min, a.deltaE(kL, kC, kH, b)), Infinity))
-    return [totalCost, acceptedCount > 0, nearest]
+    return [totalCost, acceptedCount > 0, dEMatrix]
   }
 
   return { step }

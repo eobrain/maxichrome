@@ -7,6 +7,12 @@ import { rgb, color } from 'https://unpkg.com/d3-color?module'
 const dependencies = { rgb, color, differenceCiede2000Weighted }
 const Color = ColorInject(dependencies)
 
+// HTML element id
+/* global
+   meanCostElement
+   barChartElement
+ */
+
 const colorCount = 5
 
 function * colorIndices () {
@@ -18,10 +24,8 @@ function * colorIndices () {
 const main = () => {
   const $n = document.getElementById('n')
   const $duration = document.getElementById('duration')
-  const $totalCost = document.getElementById('total-cost')
   const $state = document.getElementById('state')
   const $swatches = document.getElementById('swatches')
-  const $nearest = document.getElementById('nearest')
   $n.innerHTML = colorCount
 
   const $newSwatch = () => {
@@ -50,22 +54,29 @@ const main = () => {
   show()
 
   const optimizer = Optimizer()
-  let unchangedCount = 1
+
+  const bar = (thisColor, otherColor, dE, colorCount) => `
+  <div style="color:${otherColor.cssColor()};background-color:${thisColor.cssColor()};width:${0.1 * dE * colorCount}%">
+    ${thisColor.cssColor()} ${dE}
+  </div>`
 
   /* global performance */
   const start = performance.now()
   const iteration = () => {
-    const [totalCost, changed, nearest] = optimizer.step(colors, [])
-    $totalCost.innerHTML = totalCost
+    const [totalCost, changed, dEMatrix] = optimizer.step(colors, [])
+    meanCostElement.innerHTML = totalCost / colors.length
     $state.innerHTML = changed ? 'Optimizing...' : 'Found optimum.'
 
-    $nearest.innerHTML = nearest.map((dE, i) =>
-      `<div style="background-color:${colors[i].cssColor()};height:5px;width:${0.1 * dE * colorCount}%"></div>`).join('')
+    barChartElement.innerHTML = dEMatrix.map((row, i) =>
+      row.map((dE, j) =>
+        bar(colors[i], colors[j], dE, colorCount) +
+        bar(colors[j], colors[i], dE, colorCount)
+      ).join('')
+    ).join('')
 
     show()
 
-    unchangedCount = changed ? 0 : unchangedCount + 1
-    if (unchangedCount < 100) {
+    if (changed) {
       setTimeout(iteration, 0)
     } else {
       const elapsed = performance.now() - start
