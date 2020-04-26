@@ -60,33 +60,31 @@ const kH = 2
 
 ;(async () => {
   const csvOut = await CsvOut('perf.csv', 'n, tries, time, dEMin, dELow, dEMean, dist, roughness')
-  for (let tries = 1; tries <= 5; ++tries) {
-    const n = 7
-    const elapsedStats = Stats()
-    const dEStats = Stats()
-    const dEStddevStats = Stats()
-    for (let i = 0; i < repetitions; ++i) {
-      const start = Date.now()
-      const colors = await maxichromeDev(kL, kC, kH, n, tries)
-      const dt = (Date.now() - start) / 1000.0
-      const colorStats = Stats()
-      for (let i = 0; i < n; ++i) {
-        for (let j = i + 1; j < n; ++j) {
-          colorStats.put(colors[i].deltaE(kL, kC, kH, colors[j]))
-        }
+  const n = 5
+  const elapsedStats = Stats()
+  const dEStats = Stats()
+  const dEStddevStats = Stats()
+  for (let i = 0; i < repetitions; ++i) {
+    const start = Date.now()
+    const colors = await maxichromeDev(kL, kC, kH, n)
+    const dt = (Date.now() - start) / 1000.0
+    const colorStats = Stats()
+    for (let i = 0; i < n; ++i) {
+      for (let j = i + 1; j < n; ++j) {
+        colorStats.put(colors[i].deltaE(kL, kC, kH, colors[j]))
       }
-      elapsedStats.put(dt)
-      dEStats.put(colorStats.mean())
-      dEStddevStats.put(colorStats.stddev())
     }
-    const time = elapsedStats.mean()
-    const dEMean = dEStats.mean()
-    const dEMin = dEStats.min()
-    const dELow = dEStats.low()
-    const dist = dEStats.dist()
-    const roughness = dEStddevStats.mean()
-    console.table({ n, tries, time, dEMin, dELow, dEMean, dist, roughness })
-    csvOut.write(n, tries, time, dEMin, dELow, dEMean, dist, roughness)
+    elapsedStats.put(dt)
+    dEStats.put(colorStats.mean())
+    dEStddevStats.put(colorStats.stddev())
   }
+  const time = elapsedStats.mean()
+  const dEMean = dEStats.mean()
+  const dEMin = dEStats.min()
+  const dELow = dEStats.low()
+  const dist = dEStats.dist()
+  const roughness = dEStddevStats.mean()
+  console.table({ n, time, dEMin, dELow, dEMean, dist, roughness })
+  csvOut.write(n, time, dEMin, dELow, dEMean, dist, roughness)
   await csvOut.close()
 })()

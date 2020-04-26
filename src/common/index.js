@@ -10,7 +10,7 @@ const waitTillNextTick = () => new Promise(resolve => setTimeout(resolve, 0))
 export default dependencies => {
   const Color = ColorInject(dependencies)
 
-  const hillClimb = async colorCount => {
+  return async (colorCount) => {
     function * colorIndices () {
       for (let i = 0; i < colorCount; ++i) {
         yield i
@@ -23,26 +23,12 @@ export default dependencies => {
 
     const optimizer = Optimizer()
     while (true) {
-      const [, changed, nearest] = optimizer.step(colors)
+      const [, changed] = optimizer.step(colors)
       if (!changed) {
-        return [colors, nearest]
+        colors.sort((a, b) => b.warmth() - a.warmth())
+        return colors.map(c => c.cssColor())
       }
       waitTillNextTick()
     }
-  }
-
-  return async (colorCount, tries = 1) => {
-    let bestColors
-    let farthestNearest = 0
-    for (let i = 0; i < tries; ++i) {
-      const [colors, nearests] = await hillClimb(colorCount)
-      const nearest = nearests.reduce((acc, x) => Math.min(acc, x))
-      if (nearest > farthestNearest) {
-        farthestNearest = nearest
-        bestColors = colors
-      }
-    }
-    bestColors.sort((a, b) => b.warmth() - a.warmth())
-    return bestColors.map(c => c.cssColor())
   }
 }
