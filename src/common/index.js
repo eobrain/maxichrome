@@ -29,6 +29,7 @@ export default dependencies => {
       }
       waitTillNextTick()
     }
+    colors.sort((a, b) => b.warmth() - a.warmth())
     return colors.map(c => c.cssColor())
   }
 }
