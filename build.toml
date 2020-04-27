@@ -1,3 +1,5 @@
+#!node_modules/bajel/cli.js test
+
 ["serve"]
 exec="python -m SimpleHTTPServer 8888"
 
