@@ -73,6 +73,24 @@ Create this HTML file and view in browser:
 </html>
 ```
 
+<div style="background-color: lavenderblush">
+    <ol id="listElement">
+    </ol>
+</div>
+
+<script type="module">
+    import maxichrome from 'https://unpkg.com/maxichrome@0.1.0/src/web/index.js?module'
+    (async () => {
+
+        const colors = await maxichrome(10, ['lavenderblush'])
+
+        listElement.innerHTML = colors
+            .map(c => `<li style="color:${c}">${c}</li>`)
+            .join('')
+
+    })()
+</script>
+
 ## Technical details
 
 The `maxichrome` function uses [CIEDE2000][2] as a measure of color difference.  This takes into account how human ability to distinguish colors varies across the space of colors.
