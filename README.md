@@ -14,6 +14,8 @@ Install:
 npm install maxichrome
 ```
 
+Write code:
+
 ```js
 import maxichrome from 'maxichrome'
 
@@ -42,6 +44,8 @@ The above code prints:
 ```
 
 ## Using In the Browser
+
+Create this HTML file and view in browser:
 
 ```html
 <html>
