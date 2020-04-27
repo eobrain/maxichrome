@@ -78,16 +78,14 @@ Create this HTML file and view in browser:
     </ol>
 </div>
 
-<script type="module">
+<script 
+  type="module">
     import maxichrome from 'https://unpkg.com/maxichrome@0.1.0/src/web/index.js?module'
     (async () => {
-
         const colors = await maxichrome(10, ['lavenderblush'])
-
         listElement.innerHTML = colors
             .map(c => `<li style="color:${c}">${c}</li>`)
             .join('')
-
     })()
 </script>
 
