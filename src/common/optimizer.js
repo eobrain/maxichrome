@@ -29,7 +29,7 @@ export default (kL = 0.5, kC = 8, kH = 2) => {
         })
         avoid.forEach(avoidColor => {
           const dE = colors[i].deltaE(kL, kC, kH, avoidColor)
-          stats.put(dE)
+          stats.put(dE / 3)
         })
         return -stats.min()
       }
