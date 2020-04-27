@@ -1,5 +1,8 @@
 # Generate a set of colors that are maximally different from each other
 
+[![Build Status](https://travis-ci.com/eobrain/maxichrome.svg?branch=master)][1]
+
+
 ## Using Server-Side in Node
 
 Install:
@@ -49,3 +52,5 @@ The above code prints:
 
 </html>
 ```
+
+[1]: https://travis-ci.com/eobrain/maxichrome
