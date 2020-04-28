@@ -1,4 +1,3 @@
-import maxichrome from '../web/index.js'
 
 // Defined as id in HTML file:
 /* global
@@ -6,6 +5,7 @@ import maxichrome from '../web/index.js'
     swatchesAreaElement
     avoidColorElement
 */
+/* global maxichrome */
 
 const run = async () => {
   const colorCount = Number(colorCountElement.value)

@@ -1,10 +1,7 @@
 import maxichromeInject from '../common/index.js'
-import d3ColorDifference from 'd3-color-difference'
-import d3Color from 'd3-color'
+import { differenceCiede2000Weighted } from 'd3-color-difference'
+import { rgb, color } from 'd3-color'
 
-const dependencies = {
-  rgb: d3Color.rgb,
-  color: d3Color.color,
-  differenceCiede2000Weighted: d3ColorDifference.differenceCiede2000Weighted
-}
+const dependencies = { rgb, color, differenceCiede2000Weighted }
+
 export default maxichromeInject(dependencies)

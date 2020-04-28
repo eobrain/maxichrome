@@ -1,12 +1,23 @@
 #!node_modules/bajel/cli.js test
 
-["serve"]
+[serve]
+deps=["dist/web.min.js"]
 exec="python -m SimpleHTTPServer 8888"
 
-["test"]
+[test]
 exec="npx ava"
 
 ["perf.csv"]
 deps=["src/node/perf.js", "src/common/optimizer.js"]
 exec="node $<"
 
+["dist/web.min.js"]
+deps=["rollup.config.js", "src/node/index.js"]
+exec="npx rollup --config $<"
+
+[publish]
+deps=["dist/web.min.js"]
+exec="npm publish"
+
+[clean]
+exec="rm -rf dist"

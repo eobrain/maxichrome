@@ -1,4 +1,4 @@
-import maxichrome from '../src/node/index.js'
+import maxichrome from '../dist/index.cjs'
 import test from 'ava'
 
 test('count', async t => {
