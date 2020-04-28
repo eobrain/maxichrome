@@ -7,8 +7,8 @@
   "browser": "dist/web.min.js",
   "module": "src/node/index.js",
   "scripts": {
-    "test": "ava",
-    "build": "bajel"
+    "test": "bajel test",
+    "build": "bajel bundle"
   },
   "keywords": [
     "color",
