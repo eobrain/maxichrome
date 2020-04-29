@@ -2,18 +2,16 @@
 const isWeb = typeof window !== 'undefined'
 const isNode = typeof process !== 'undefined'
 
-const isDockedDevtool = isWeb && (
+const isWebDevelopment = isWeb && (
   window.outerWidth - window.innerWidth > 100 ||
     window.outerHeight - window.innerHeight > 100)
 
-const isDevelopment = isNode && (process.env.NODE_ENV || 'development') === 'development'
+const isNodeProduction = isNode && (process.env.NODE_ENV || 'production') === 'production'
 
-const isDebug = isDockedDevtool || isDevelopment
+const isDebug = isWebDevelopment || (isNode && !isNodeProduction)
 
 if (isDebug) {
-  console.log('Contract checking enabled.')
-} else {
-  console.log('No Contract checking.')
+  console.warn('Contract checking enabled.')
 }
 
 export const requires = isDebug

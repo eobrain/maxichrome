@@ -1,24 +1,49 @@
 #!node_modules/bajel/cli.js test
-
 [serve]
-deps=["bundle"]
-exec="python -m SimpleHTTPServer 8888"
+deps = ["dist/index.cjs"]
+exec = "python -m SimpleHTTPServer 8888"
 
 [test]
-deps=["bundle"]
-exec="npx ava"
+deps = [
+    "test_default",
+    "test_contract_production",
+    "test_contract_development",
+    "test_contract_no_env",
+]
+
+[test_default]
+deps = ["dist/index.cjs"]
+exec = "npx ava"
+
+[test_contract_production]
+exec = "NODE_ENV=production npx ava test/contract_test.js"
+
+[test_contract_development]
+exec = "NODE_ENV=development npx ava test/contract_test.js"
+
+[test_contract_no_env]
+exec = "NODE_ENV= npx ava test/contract_test.js"
 
 ["perf.csv"]
-deps=["src/node/perf.js", "src/common/optimizer.js"]
-exec="node $<"
+deps = ["src/node/perf.js", "src/common/optimizer.js"]
+exec = "node $<"
 
-[bundle]
-deps=["rollup.config.js", "src/node/index.js"]
-exec="npx rollup --config $<"
+["dist/index.cjs"]
+deps = [
+    "rollup.config.js",
+    "src/node/index.js",
+    "src/common/index.js",
+    "src/common/random.js",
+    "src/common/color.js",
+    "src/common/optimizer.js",
+    "src/common/contract.js",
+    "src/common/random.js",
+]
+exec = "npx rollup --config $<"
 
 [publish]
-deps=["bundle"]
-exec="npm publish"
+deps = ["dist/index.cjs"]
+exec = "npm publish"
 
 [clean]
-exec="rm -rf dist"
+exec = "rm -rf dist"
