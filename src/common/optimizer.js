@@ -1,5 +1,3 @@
-import { shuffle } from './random.js'
-
 const arrayOf = makeElement => n => [...Array(n)].map((_, i) => makeElement(i))
 
 const Stats = () => {
@@ -36,7 +34,7 @@ export default (kL = 0.5, kC = 8, kH = 2) => {
       const origA = colors[i]
       let aBest = origA
       let bestCost = cost()
-      shuffle(origA.perturbations()).forEach(aCandidate => {
+      origA.perturbations().forEach(aCandidate => {
         colors[i] = aCandidate
         const costCandidate = cost()
         if (costCandidate < bestCost) {
