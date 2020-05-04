@@ -1,4 +1,3 @@
-import { randInt } from '../common/random.js'
 import ColorInject from '../common/color.js'
 import Optimizer from '../common/optimizer.js'
 import { differenceCiede2000Weighted } from 'https://unpkg.com/d3-color-difference?module'
@@ -37,9 +36,25 @@ const main = () => {
 
   const view = [...colorIndices()].map(() => $newSwatch())
 
-  const colors = [...colorIndices()].map(() =>
-    new Color(randInt(256), randInt(256), randInt(256))
-  )
+  const cubeRoot = Math.pow(colorCount, 1 / 3.0)
+  const sep = Math.round(256 / (cubeRoot + 1))
+  const halfSep = Math.floor(sep / 2)
+
+  const colorGrid = () => {
+    const result = []
+    for (let r = halfSep; r < 256; r += sep) {
+      for (let g = halfSep; g < 256; g += sep) {
+        for (let b = halfSep; b < 256; b += sep) {
+          result.push(new Color(r, g, b))
+          if (result.length === colorCount) {
+            return result
+          }
+        }
+      }
+    }
+    throw new Error('Assertion failed. Not enough colors.')
+  }
+  const colors = colorGrid()
 
   const show = () => {
     colors.sort((a, b) => a.warmth() - b.warmth())

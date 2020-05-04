@@ -77,7 +77,7 @@ Create this HTML file and view in browser:
 
 The `maxichrome` function uses [CIEDE2000][2] as a measure of color difference.  This takes into account how human ability to distinguish colors varies across the space of colors.
 
-It picks random colors, and then uses [hill climbing][3] to iteratively improve them to maximize the minimum perceptual difference of each color from all other colors.
+It picks initial colors spread in a grid in RGB space, and then uses [hill climbing][3] to iteratively improve them to maximize the minimum perceptual difference of each color from all other colors.
 
 [1]: https://travis-ci.com/eobrain/maxichrome
 [2]: https://en.wikipedia.org/wiki/Color_difference#CIEDE2000

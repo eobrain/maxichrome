@@ -6,7 +6,7 @@ test('count', async t => {
   t.is(colors.length, 2)
 })
 
-test('default emtpy avoid list', async t => {
+test('default empty avoid list', async t => {
   const colors = await maxichrome(2)
   t.is(colors.length, 2)
 })
