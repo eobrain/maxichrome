@@ -1,4 +1,7 @@
 #!node_modules/bajel/cli.js test
+
+TEST="ava test/contract_test.js"
+
 [serve]
 deps = ["dist/index.cjs"]
 exec = "python -m SimpleHTTPServer 8888"
@@ -16,13 +19,13 @@ deps = ["dist/index.cjs"]
 exec = "ava"
 
 [test_contract_production]
-exec = "NODE_ENV=production ava test/contract_test.js"
+exec = "NODE_ENV=production $(TEST)"
 
 [test_contract_development]
-exec = "NODE_ENV=development ava test/contract_test.js"
+exec = "NODE_ENV=development $(TEST)"
 
 [test_contract_no_env]
-exec = "NODE_ENV= ava test/contract_test.js"
+exec = "NODE_ENV=  $(TEST)"
 
 ["perf.csv"]
 deps = ["src/node/perf.js", "src/common/optimizer.js"]
