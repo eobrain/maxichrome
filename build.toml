@@ -13,16 +13,16 @@ deps = [
 
 [test_default]
 deps = ["dist/index.cjs"]
-exec = "npx ava"
+exec = "ava"
 
 [test_contract_production]
-exec = "NODE_ENV=production npx ava test/contract_test.js"
+exec = "NODE_ENV=production ava test/contract_test.js"
 
 [test_contract_development]
-exec = "NODE_ENV=development npx ava test/contract_test.js"
+exec = "NODE_ENV=development ava test/contract_test.js"
 
 [test_contract_no_env]
-exec = "NODE_ENV= npx ava test/contract_test.js"
+exec = "NODE_ENV= ava test/contract_test.js"
 
 ["perf.csv"]
 deps = ["src/node/perf.js", "src/common/optimizer.js"]
@@ -39,7 +39,7 @@ deps = [
     "src/common/contract.js",
     "src/common/random.js",
 ]
-exec = "npx rollup --config $<"
+exec = "rollup --config $<"
 
 [publish]
 deps = ["dist/index.cjs"]
