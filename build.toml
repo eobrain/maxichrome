@@ -9,6 +9,7 @@ deps = [
     "test_contract_production",
     "test_contract_development",
     "test_contract_no_env",
+    "example.html",
 ]
 
 [test_default]
@@ -40,6 +41,10 @@ deps = [
     "src/common/random.js",
 ]
 exec = "npx rollup --config $<"
+
+["example.html"]
+deps=["dist/index.cjs", "make-example.js"]
+exec="node make-example.js > $@"
 
 [publish]
 deps = ["dist/index.cjs"]
