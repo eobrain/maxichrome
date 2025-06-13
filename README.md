@@ -86,4 +86,4 @@ It picks initial colors spread in a grid in RGB space, and then uses [hill climb
 [1]: https://travis-ci.com/eobrain/maxichrome
 [2]: https://en.wikipedia.org/wiki/Color_difference#CIEDE2000
 [3]: https://en.wikipedia.org/wiki/Hill_climbing
-[4]: example.html
+[4]: https://eobrain.github.io/maxichrome/example.html
